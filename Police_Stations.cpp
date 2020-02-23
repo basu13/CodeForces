@@ -34,14 +34,108 @@ void soe()
         }
     }
 }
+vector<vector<int> > adj;
+vector<int> edge[300000];
+int v;
+bool pl[300000];
+void bfs(bool b[],int s,int d,vector<int> &fil)
+{
+    b[s]=true;
+    queue<int> q;
+    //fil.pb(s);
+    q.push(s);
+    int dis=0;
+    while(!q.empty() && dis<=d)
+    {
+        dis++;
+        int t=q.front();
+        fil.pb(t);
+        q.pop();
+        for(int i=1;i<=v;i++)
+        {
+            if(adj[t][i]!=0 && b[i]==false && pl[i]==false)
+            {
+                q.push(i);
+                b[i]=true;
+            }
+        }
+    }
 
+
+}
+void stations(int pol[],int k,int d)
+{
+    bool b[v+1];
+    memset(b,false,sizeof(b));
+    memset(pl,false,sizeof(pl));
+    for(int i=0;i<k;i++)
+    {
+        pl[pol[i]]=true;
+    }
+    vector<int> res;
+    for(int i=0;i<k;i++)
+    {
+        vector<int> fil;
+        bfs(b,pol[i],d,fil);
+        /*for(int j=0;j<fil.size();j++)
+          cout<<fil[j]<<" ";
+        cout<<"\n";*/
+        for(int j=0;j<fil.size();j++)
+        {
+            int ch=fil[j];
+            for(int x=1;x<=v;x++)
+            {
+                if(adj[ch][x]!=0 && b[x]==false)
+                {
+                    res.pb(adj[ch][x]);
+                    adj[ch][x]=0;
+                    adj[x][ch]=0;
+
+                }
+            }
+        }
+    }
+    cout<<res.size()<<"\n";
+    for(int i=0;i<res.size();i++)
+        cout<<res[i]<<" ";
+
+}
 int main()
 {
     fast;
     long t;
-    cin>>t;
+    //cin>>t;
+    t=1;
     while(t--)
     {
+      int k,d;
+      cin>>v>>k>>d;
+      int pol[k];
+      for(int i=0;i<k;i++)
+        cin>>pol[i];
+      for(int i=0;i<=v;i++)
+      {
+          vector<int> tmp;
+          for(int j=0;j<=v;j++)
+            tmp.pb(0);
+          adj.pb(tmp);
+      }
+      for(int i=0;i<v-1;i++)
+      {
+          int u,v;
+          cin>>u>>v;
+          adj[u][v]=i+1;
+          adj[v][u]=i+1;
+          edge[u].pb(v);
+          edge[v].pb(u);
+      }
+      /*for(int i=0;i<=v;i++)
+      {
+          for(int j=0;j<=v;j++)
+            cout<<adj[i][j]<<" ";
+          cout<<"\n";
+      }*/
+      stations(pol,k,d);
 
     }
 
