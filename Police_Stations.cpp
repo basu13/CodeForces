@@ -34,67 +34,44 @@ void soe()
         }
     }
 }
-vector<vector<int> > adj;
-vector<int> edge[300000];
+vector<int> adj[300005];
 int v;
-bool pl[300000];
-void bfs(bool b[],int s,int d,vector<int> &fil)
-{
-    b[s]=true;
-    queue<int> q;
-    //fil.pb(s);
-    q.push(s);
-    int dis=0;
-    while(!q.empty() && dis<=d)
-    {
-        dis++;
-        int t=q.front();
-        fil.pb(t);
-        q.pop();
-        for(int i=1;i<=v;i++)
-        {
-            if(adj[t][i]!=0 && b[i]==false && pl[i]==false)
-            {
-                q.push(i);
-                b[i]=true;
-            }
-        }
-    }
-
-
-}
+map<pair<int,int>,int > mp;
+int dis[300005];
 void stations(int pol[],int k,int d)
 {
     bool b[v+1];
     memset(b,false,sizeof(b));
-    memset(pl,false,sizeof(pl));
+    memset(dis,-1,sizeof(dis));
+    queue<int> q;
     for(int i=0;i<k;i++)
     {
-        pl[pol[i]]=true;
+        dis[pol[i]]=0;
+        q.push(pol[i]);
     }
     vector<int> res;
-    for(int i=0;i<k;i++)
+    while(!q.empty())
     {
-        vector<int> fil;
-        bfs(b,pol[i],d,fil);
-        /*for(int j=0;j<fil.size();j++)
-          cout<<fil[j]<<" ";
-        cout<<"\n";*/
-        for(int j=0;j<fil.size();j++)
+        int t=q.front();
+        q.pop();
+        b[t]=true;
+        for(int i=0;i<adj[t].size();i++)
         {
-            int ch=fil[j];
-            for(int x=1;x<=v;x++)
+            int nod=adj[t][i];
+            if(b[nod])
+                continue;
+            if(b[nod]==false && dis[nod]==-1)
             {
-                if(adj[ch][x]!=0 && b[x]==false)
-                {
-                    res.pb(adj[ch][x]);
-                    adj[ch][x]=0;
-                    adj[x][ch]=0;
-
-                }
+                q.push(nod);
+                dis[nod]=dis[t]+1;
+            }
+            else
+            {
+                res.pb(mp[mpr(t,nod)]);
             }
         }
     }
+
     cout<<res.size()<<"\n";
     for(int i=0;i<res.size();i++)
         cout<<res[i]<<" ";
@@ -113,21 +90,28 @@ int main()
       int pol[k];
       for(int i=0;i<k;i++)
         cin>>pol[i];
-      for(int i=0;i<=v;i++)
-      {
-          vector<int> tmp;
-          for(int j=0;j<=v;j++)
-            tmp.pb(0);
-          adj.pb(tmp);
-      }
+
+      cout<<k<<"\n";
+	  for(int i=0;i<k;i++)
+          cout<<pol[i]<<" ";
+      cout<<"\n";
+
+      sort(pol, pol + k);
+	  k = unique(pol, pol + k) - pol;
+
+	  cout<<k<<"\n";
+	  for(int i=0;i<k;i++)
+          cout<<pol[i]<<" ";
+      cout<<"\n";
+
       for(int i=0;i<v-1;i++)
       {
           int u,v;
           cin>>u>>v;
-          adj[u][v]=i+1;
-          adj[v][u]=i+1;
-          edge[u].pb(v);
-          edge[v].pb(u);
+          adj[u].pb(v);
+          adj[v].pb(u);
+          mp[mpr(u,v)]=i+1;
+          mp[mpr(v,u)]=i+1;
       }
       /*for(int i=0;i<=v;i++)
       {
