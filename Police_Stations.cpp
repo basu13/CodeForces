@@ -91,18 +91,18 @@ int main()
       for(int i=0;i<k;i++)
         cin>>pol[i];
 
-      cout<<k<<"\n";
+      /*cout<<k<<"\n";
 	  for(int i=0;i<k;i++)
           cout<<pol[i]<<" ";
-      cout<<"\n";
+      cout<<"\n";*/
 
       sort(pol, pol + k);
-	  k = unique(pol, pol + k) - pol;
+	  k =unique(pol, pol + k)-pol;
 
-	  cout<<k<<"\n";
+	  /*cout<<k<<"\n";
 	  for(int i=0;i<k;i++)
           cout<<pol[i]<<" ";
-      cout<<"\n";
+      cout<<"\n";*/
 
       for(int i=0;i<v-1;i++)
       {
